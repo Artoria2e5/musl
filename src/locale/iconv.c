@@ -403,6 +403,13 @@ size_t iconv(iconv_t cd, char **restrict in, size_t *restrict inb, char **restri
 			if (c < 128) break;
 			if (c < 0xa1) goto ilseq;
 		case GBK:
+			// CP936 Euro. WHATWG tolerates it in GB18030, should we too?
+			if (c == 128) {
+				if (type != GBK)
+					goto ilseq;
+				c = 0x20AC;
+				break;
+			}
 		case GB18030:
 			if (c < 128) break;
 			c -= 0x81;
